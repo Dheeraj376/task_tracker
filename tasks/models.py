@@ -5,17 +5,18 @@ from django.utils import timezone
 
 class Task_Database(models.Model):
 
-    # Priority options
     class Priority(models.TextChoices):
         LOW = "LOW", "Low"
         MEDIUM = "MEDIUM", "Medium"
         HIGH = "HIGH", "High"
 
-    # Status options
     class Status(models.TextChoices):
         TO_DO = "TO_DO", "To Do"
         IN_PROGRESS = "IN_PROGRESS", "In Progress"
         DONE = "DONE", "Done"
+
+
+        
 
     task_name = models.CharField(
         max_length=100,

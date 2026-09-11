@@ -1,518 +1,625 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>Task Tracker</title>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fb;
-            color: #1f2937;
-        }
-
-        button,
-        input,
-        textarea,
-        select {
-            font-family: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 20px 40px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-title {
-            font-size: 25px;
-            margin-bottom: 5px;
-        }
-
-        .header-subtitle {
-            color: #6b7280;
-            font-size: 14px;
-        }
-
-        .add-btn {
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            padding: 11px 18px;
-            font-weight: 600;
-        }
-
-        .add-btn:hover {
-            background: #1d4ed8;
-        }
+<title>Task Tracker</title>
 
 
-        /* =========================
-           MAIN
-        ========================= */
+<style>
 
-        .container {
-            max-width: 1400px;
-            margin: 30px auto;
-            padding: 0 25px;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
 
-        /* =========================
-           SUMMARY
-        ========================= */
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fb;
+        color: #1f2937;
+    }
+
+
+    button,
+    input,
+    textarea,
+    select {
+        font-family: inherit;
+    }
+
+
+    button {
+        cursor: pointer;
+    }
+
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .header {
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 20px 40px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .header-title {
+        font-size: 25px;
+        margin-bottom: 5px;
+    }
+
+
+    .header-subtitle {
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+
+    .add-btn {
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 7px;
+        padding: 11px 18px;
+        font-weight: 600;
+    }
+
+
+    .add-btn:hover {
+        background: #1d4ed8;
+    }
+
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    .container {
+        max-width: 1400px;
+        margin: 30px auto;
+        padding: 0 25px;
+    }
+
+
+    /* =========================
+       SUMMARY
+    ========================= */
+
+    .summary {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+
+    .summary-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 20px;
+    }
+
+
+    .summary-title {
+        color: #6b7280;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+
+    .summary-number {
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+
+    /* =========================
+       FILTERS
+    ========================= */
+
+    .filters {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 18px;
+
+        display: flex;
+        align-items: end;
+        gap: 15px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .filter {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+
+    .filter label {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+
+    .filter select {
+        min-width: 160px;
+        padding: 9px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: white;
+    }
+
+
+    .sort-btn {
+        margin-left: auto;
+        padding: 9px 14px;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+    }
+
+
+    .sort-btn:hover {
+        background: #f3f4f6;
+    }
+
+
+    /* =========================
+       TASK TABLE
+    ========================= */
+
+    .task-section {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+
+    .task-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid #e5e7eb;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+
+    .task-header h2 {
+        font-size: 18px;
+    }
+
+
+    .task-count {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+    th {
+        background: #f9fafb;
+        padding: 13px 16px;
+        text-align: left;
+
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+    }
+
+
+    td {
+        padding: 15px 16px;
+        border-top: 1px solid #f0f0f0;
+        font-size: 14px;
+    }
+
+
+    tbody tr:hover {
+        background: #fafafa;
+    }
+
+
+    .task-name {
+        font-weight: 600;
+    }
+
+
+    .description {
+        max-width: 250px;
+        color: #6b7280;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* =========================
+       BADGES
+    ========================= */
+
+    .badge {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 20px;
+
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+
+    .low {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+
+    .medium {
+        background: #fffbeb;
+        color: #b45309;
+    }
+
+
+    .high {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+
+    .to-do {
+        background: #f3f4f6;
+        color: #4b5563;
+    }
+
+
+    .in-progress {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+
+    .done {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+
+    /* =========================
+       ACTIONS
+    ========================= */
+
+    .actions {
+        display: flex;
+        gap: 7px;
+        align-items: center;
+    }
+
+
+    .edit-btn,
+    .delete-btn {
+        padding: 6px 10px;
+        border-radius: 5px;
+        background: white;
+        border: 1px solid #d1d5db;
+        font-size: 12px;
+    }
+
+
+    .edit-btn:hover {
+        background: #f3f4f6;
+    }
+
+
+    .delete-btn {
+        color: #dc2626;
+    }
+
+
+    .delete-btn:hover {
+        background: #fef2f2;
+    }
+
+
+    /* =========================
+       EMPTY STATE
+    ========================= */
+
+    .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: #6b7280;
+    }
+
+
+    .empty-state h3 {
+        margin-bottom: 8px;
+        color: #374151;
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+        display: none;
+
+        position: fixed;
+        inset: 0;
+
+        background: rgba(0, 0, 0, 0.45);
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 20px;
+    }
+
+
+    .modal.show {
+        display: flex;
+    }
+
+
+    .modal-content {
+        background: white;
+        width: 100%;
+        max-width: 600px;
+
+        border-radius: 10px;
+        padding: 25px;
+
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 20px;
+    }
+
+
+    .modal-header h2 {
+        font-size: 20px;
+    }
+
+
+    .close-btn {
+        background: none;
+        border: none;
+
+        font-size: 25px;
+        color: #6b7280;
+    }
+
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+
+        padding: 10px 12px;
+
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+
+        outline: none;
+    }
+
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #2563eb;
+    }
+
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .assignee-options {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: #ffffff;
+    }
+
+    .assignee-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 400 !important;
+        margin: 0 !important;
+    }
+
+    .assignee-option:hover {
+        background: #f3f4f6;
+    }
+
+    .assignee-option input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        accent-color: #2563eb;
+        cursor: pointer;
+    }
+
+    .field-help {
+        display: block;
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+
+    /* =========================
+       FORM BUTTONS
+    ========================= */
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+
+        margin-top: 20px;
+    }
+
+
+    .cancel-btn {
+        padding: 10px 18px;
+
+        background: white;
+
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+    }
+
+
+    .save-btn {
+        padding: 10px 18px;
+
+        background: #2563eb;
+        color: white;
+
+        border: none;
+        border-radius: 6px;
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
 
         .summary {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        .summary-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
+
+        .header {
             padding: 20px;
         }
+    }
 
-        .summary-title {
-            color: #6b7280;
-            font-size: 13px;
-            margin-bottom: 10px;
+
+    @media (max-width: 600px) {
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
         }
 
-        .summary-number {
-            font-size: 28px;
-            font-weight: bold;
+
+        .add-btn {
+            width: 100%;
         }
 
 
-        /* =========================
-           FILTERS
-        ========================= */
+        .container {
+            padding: 0 15px;
+        }
+
+
+        .summary {
+            grid-template-columns: 1fr;
+        }
+
 
         .filters {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 18px;
-
-            display: flex;
-            align-items: end;
-            gap: 15px;
-
-            margin-bottom: 20px;
-        }
-
-        .filter {
-            display: flex;
+            align-items: stretch;
             flex-direction: column;
-            gap: 6px;
         }
 
-        .filter label {
-            font-size: 12px;
-            color: #6b7280;
-        }
 
         .filter select {
-            min-width: 160px;
-            padding: 9px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            background: white;
+            width: 100%;
         }
+
 
         .sort-btn {
-            margin-left: auto;
-            padding: 9px 14px;
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
+            margin-left: 0;
         }
 
-        .sort-btn:hover {
-            background: #f3f4f6;
-        }
-
-
-        /* =========================
-           TASK TABLE
-        ========================= */
-
-        .task-section {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .task-header {
-            padding: 18px 20px;
-            border-bottom: 1px solid #e5e7eb;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .task-header h2 {
-            font-size: 18px;
-        }
-
-        .task-count {
-            color: #6b7280;
-            font-size: 13px;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: #f9fafb;
-            padding: 13px 16px;
-            text-align: left;
-
-            font-size: 12px;
-            color: #6b7280;
-            text-transform: uppercase;
-        }
-
-        td {
-            padding: 15px 16px;
-            border-top: 1px solid #f0f0f0;
-            font-size: 14px;
-        }
-
-        tbody tr:hover {
-            background: #fafafa;
-        }
-
-        .task-name {
-            font-weight: 600;
-        }
-
-        .description {
-            max-width: 250px;
-            color: #6b7280;
-
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-
-        /* =========================
-           BADGES
-        ========================= */
-
-        .badge {
-            display: inline-block;
-            padding: 5px 9px;
-            border-radius: 20px;
-
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .low {
-            background: #ecfdf5;
-            color: #047857;
-        }
-
-        .medium {
-            background: #fffbeb;
-            color: #b45309;
-        }
-
-        .high {
-            background: #fef2f2;
-            color: #dc2626;
-        }
-
-        .to-do {
-            background: #f3f4f6;
-            color: #4b5563;
-        }
-
-        .in-progress {
-            background: #eff6ff;
-            color: #2563eb;
-        }
-
-        .done {
-            background: #ecfdf5;
-            color: #047857;
-        }
-
-
-        /* =========================
-           ACTIONS
-        ========================= */
-
-        .actions {
-            display: flex;
-            gap: 7px;
-        }
-
-        .edit-btn,
-        .delete-btn {
-            padding: 6px 10px;
-            border-radius: 5px;
-            background: white;
-            border: 1px solid #d1d5db;
-            font-size: 12px;
-        }
-
-        .edit-btn:hover {
-            background: #f3f4f6;
-        }
-
-        .delete-btn {
-            color: #dc2626;
-        }
-
-        .delete-btn:hover {
-            background: #fef2f2;
-        }
-
-
-        /* =========================
-           EMPTY STATE
-        ========================= */
-
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: #6b7280;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 8px;
-            color: #374151;
-        }
-
-
-        /* =========================
-           MODAL
-        ========================= */
-
-        .modal {
-            display: none;
-
-            position: fixed;
-            inset: 0;
-
-            background: rgba(0, 0, 0, 0.45);
-
-            align-items: center;
-            justify-content: center;
-
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 600px;
-
-            border-radius: 10px;
-            padding: 25px;
-
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            margin-bottom: 20px;
-        }
-
-        .modal-header h2 {
-            font-size: 20px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-
-            font-size: 25px;
-            color: #6b7280;
-        }
-
-
-        /* =========================
-           FORM
-        ========================= */
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-
-            padding: 10px 12px;
-
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-
-            outline: none;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            border-color: #2563eb;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
 
         .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
         }
+    }
+
+</style>
 
 
-        /* =========================
-           FORM BUTTONS
-        ========================= */
-
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-
-            margin-top: 20px;
-        }
-
-        .cancel-btn {
-            padding: 10px 18px;
-
-            background: white;
-
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-        }
-
-        .save-btn {
-            padding: 10px 18px;
-
-            background: #2563eb;
-            color: white;
-
-            border: none;
-            border-radius: 6px;
-        }
-
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media (max-width: 900px) {
-
-            .summary {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .header {
-                padding: 20px;
-            }
-        }
-
-
-        @media (max-width: 600px) {
-
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-
-            .add-btn {
-                width: 100%;
-            }
-
-            .container {
-                padding: 0 15px;
-            }
-
-            .summary {
-                grid-template-columns: 1fr;
-            }
-
-            .filters {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .filter select {
-                width: 100%;
-            }
-
-            .sort-btn {
-                margin-left: 0;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
-
 
 <body>
 
@@ -524,6 +631,7 @@
 <header class="header">
 
     <div>
+
         <h1 class="header-title">
             Task Tracker
         </h1>
@@ -531,14 +639,16 @@
         <p class="header-subtitle">
             Manage your team's tasks in one place
         </p>
+
     </div>
 
+
     <button
+        type="button"
         class="add-btn"
-        onclick="openCreateModal()">
-
+        onclick="openCreateModal()"
+    >
         + Add Task
-
     </button>
 
 </header>
@@ -621,21 +731,36 @@
                 Status
             </label>
 
-            <select id="statusFilter">
+            <select
+                id="statusFilter"
+                onchange="applyFilters()"
+            >
 
-                <option value="ALL">
+                <option
+                    value="ALL"
+                    {% if current_status == "ALL" %}selected{% endif %}
+                >
                     All
                 </option>
 
-                <option value="TO_DO">
+                <option
+                    value="TO_DO"
+                    {% if current_status == "TO_DO" %}selected{% endif %}
+                >
                     To Do
                 </option>
 
-                <option value="IN_PROGRESS">
+                <option
+                    value="IN_PROGRESS"
+                    {% if current_status == "IN_PROGRESS" %}selected{% endif %}
+                >
                     In Progress
                 </option>
 
-                <option value="DONE">
+                <option
+                    value="DONE"
+                    {% if current_status == "DONE" %}selected{% endif %}
+                >
                     Done
                 </option>
 
@@ -650,21 +775,36 @@
                 Priority
             </label>
 
-            <select id="priorityFilter">
+            <select
+                id="priorityFilter"
+                onchange="applyFilters()"
+            >
 
-                <option value="ALL">
+                <option
+                    value="ALL"
+                    {% if current_priority == "ALL" %}selected{% endif %}
+                >
                     All
                 </option>
 
-                <option value="LOW">
+                <option
+                    value="LOW"
+                    {% if current_priority == "LOW" %}selected{% endif %}
+                >
                     Low
                 </option>
 
-                <option value="MEDIUM">
+                <option
+                    value="MEDIUM"
+                    {% if current_priority == "MEDIUM" %}selected{% endif %}
+                >
                     Medium
                 </option>
 
-                <option value="HIGH">
+                <option
+                    value="HIGH"
+                    {% if current_priority == "HIGH" %}selected{% endif %}
+                >
                     High
                 </option>
 
@@ -674,11 +814,15 @@
 
 
         <button
+            type="button"
             class="sort-btn"
-            onclick="sortTasks()">
-
-            Due Date ↑
-
+            onclick="sortTasks()"
+        >
+            {% if current_sort == "desc" %}
+                Due Date ↓
+            {% else %}
+                Due Date ↑
+            {% endif %}
         </button>
 
     </section>
@@ -698,7 +842,10 @@
             </h2>
 
             <span class="task-count">
-                {{ total_tasks }} task{{ total_tasks|pluralize }}
+
+                {{ total_tasks }}
+                task{{ total_tasks|pluralize }}
+
             </span>
 
         </div>
@@ -715,8 +862,6 @@
                         <th>Task</th>
 
                         <th>Description</th>
-
-                        <th>Assignee</th>
 
                         <th>Priority</th>
 
@@ -739,32 +884,36 @@
 
                     <tr>
 
+
                         <!-- TASK NAME -->
 
                         <td>
+
                             <span class="task-name">
                                 {{ task.task_name }}
                             </span>
+
                         </td>
 
 
                         <!-- DESCRIPTION -->
 
                         <td>
+
                             <span class="description">
                                 {{ task.task_description }}
                             </span>
+
                         </td>
 
 
-                        <!-- ASSIGNEE -->
+                       
 
-                        <td>
-                            {{ task.task_assignee }}
-                        </td>
+            
 
 
-                        <!-- PRIORITY -->
+            <!-- PRIORITY -->
+
 
                         <td>
 
@@ -834,8 +983,12 @@
 
                         <!-- ACTIONS -->
 
-                       <td>
+                        <td>
+
                             <div class="actions">
+
+
+                                <!-- EDIT BUTTON -->
 
                                 <button
                                     type="button"
@@ -847,19 +1000,36 @@
                                         '{{ task.task_assignee|escapejs }}',
                                         '{{ task.task_priority }}',
                                         '{{ task.task_status }}',
-                                        '{{ task.task_due_date}}'
-                                    )">
+                                        '{{ task.task_due_date }}'
+                                    )"
+                                >
                                     Edit
                                 </button>
 
-                                <button
-                                    type="button"
-                                    class="delete-btn"
-                                    onclick="deleteTask('{{ task.id }}')">
-                                    Delete
-                                </button>
+
+                                <!-- DELETE FORM WITH CSRF -->
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'delete_task' task.id %}"
+                                    style="display: inline;"
+                                    onsubmit="return confirm('Are you sure you want to delete this task?');"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <button
+                                        type="submit"
+                                        class="delete-btn"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
 
                             </div>
+
                         </td>
 
                     </tr>
@@ -908,7 +1078,8 @@
 
 <div
     class="modal"
-    id="taskModal">
+    id="taskModal"
+>
 
     <div class="modal-content">
 
@@ -922,18 +1093,24 @@
             <button
                 type="button"
                 class="close-btn"
-                onclick="closeModal()">
-
+                onclick="closeModal()"
+            >
                 ×
-
             </button>
 
         </div>
 
 
+        <!--
+            CSRF TOKEN ADDED
+            This form handles CREATE and EDIT.
+        -->
+
         <form
             method="POST"
-            id="taskForm">
+            id="taskForm"
+            action="{% url 'create_task' %}"
+        >
 
             {% csrf_token %}
 
@@ -952,7 +1129,8 @@
                     id="taskName"
                     maxlength="100"
                     placeholder="Enter task name"
-                    required>
+                    required
+                >
 
             </div>
 
@@ -969,7 +1147,8 @@
                     name="task_description"
                     id="description"
                     maxlength="500"
-                    placeholder="Enter task description"></textarea>
+                    placeholder="Enter task description"
+                ></textarea>
 
             </div>
 
@@ -978,37 +1157,77 @@
 
             <div class="form-group">
 
-                <label for="assignee">
+                <label>
                     Assignee
                 </label>
 
+                <div
+                    class="assignee-options"
+                    id="assigneeOptions"
+                    aria-describedby="assigneeHelp"
+                >
+
+                    <label class="assignee-option">
+                        <input type="checkbox" name="task_assignee" value="Dheeraj">
+                        <span>Dheeraj</span>
+                    </label>
+
+                    <label class="assignee-option">
+                        <input type="checkbox" name="task_assignee" value="Sachin">
+                        <span>Sachin</span>
+                    </label>
+
+                    <label class="assignee-option">
+                        <input type="checkbox" name="task_assignee" value="Amal">
+                        <span>Amal</span>
+                    </label>
+
+                    <label class="assignee-option">
+                        <input type="checkbox" name="task_assignee" value="Anand">
+                        <span>Anand</span>
+                    </label>
+
+                    <label class="assignee-option">
+                        <input type="checkbox" name="task_assignee" value="Joseph">
+                        <span>Joseph</span>
+                    </label>
+
+                </div>
+
+                <small id="assigneeHelp" class="field-help">
+                    Select one or more assignees.
+                </small>
+
+            </div>
+
+
+            <!-- PRIORITY -->
+
+            <div class="form-group">
+
+                <label for="priority">
+                    Priority
+                </label>
+
                 <select
-                    name="task_assignee"
-                    id="assignee"
-                    required>
+                    name="task_priority"
+                    id="priority"
+                    required
+                >
 
-                    <option value="">
-                        Select an assignee
+                    <option value="LOW">
+                        Low
                     </option>
 
-                    <option value="Dheeraj">
-                        Dheeraj
+                    <option
+                        value="MEDIUM"
+                        selected
+                    >
+                        Medium
                     </option>
 
-                    <option value="Sachin">
-                        Sachin
-                    </option>
-
-                    <option value="Amal">
-                        Amal
-                    </option>
-
-                    <option value="Anand">
-                        Anand
-                    </option>
-
-                    <option value="Joseph">
-                        Joseph
+                    <option value="HIGH">
+                        High
                     </option>
 
                 </select>
@@ -1016,71 +1235,41 @@
             </div>
 
 
-            <!-- PRIORITY + STATUS -->
+            <!--
+                STATUS
 
-            <div class="form-row">
+                Hidden when creating.
+                Visible when editing.
+            -->
 
-                <div class="form-group">
+            <div
+                class="form-group"
+                id="statusGroup"
+                style="display: none;"
+            >
 
-                    <label for="priority">
-                        Priority
-                    </label>
+                <label for="status">
+                    Status
+                </label>
 
-                    <select
-                        name="task_priority"
-                        id="priority"
-                        required>
+                <select
+                    name="task_status"
+                    id="status"
+                >
 
-                        <option value="LOW">
-                            Low
-                        </option>
+                    <option value="TO_DO">
+                        To Do
+                    </option>
 
-                        <option
-                            value="MEDIUM"
-                            selected>
+                    <option value="IN_PROGRESS">
+                        In Progress
+                    </option>
 
-                            Medium
+                    <option value="DONE">
+                        Done
+                    </option>
 
-                        </option>
-
-                        <option value="HIGH">
-                            High
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="status">
-                        Status
-                    </label>
-
-                    <select
-                        name="task_status"
-                        id="status">
-
-                        <option
-                            value="TO_DO"
-                            selected>
-
-                            To Do
-
-                        </option>
-
-                        <option value="IN_PROGRESS">
-                            In Progress
-                        </option>
-
-                        <option value="DONE">
-                            Done
-                        </option>
-
-                    </select>
-
-                </div>
+                </select>
 
             </div>
 
@@ -1097,7 +1286,8 @@
                     type="date"
                     name="task_due_date"
                     id="dueDate"
-                    required>
+                    required
+                >
 
             </div>
 
@@ -1109,22 +1299,21 @@
                 <button
                     type="button"
                     class="cancel-btn"
-                    onclick="closeModal()">
-
+                    onclick="closeModal()"
+                >
                     Cancel
-
                 </button>
 
 
                 <button
                     type="submit"
-                    class="save-btn">
-
+                    class="save-btn"
+                >
                     Save Task
-
                 </button>
 
             </div>
+
 
         </form>
 
@@ -1136,20 +1325,81 @@
 
 <script>
 
+
     /* =========================
        OPEN CREATE MODAL
     ========================= */
 
     function openCreateModal() {
 
-        document.getElementById("modalTitle").textContent =
+        const form =
+            document.getElementById("taskForm");
+
+        const modal =
+            document.getElementById("taskModal");
+
+        const title =
+            document.getElementById("modalTitle");
+
+        const statusGroup =
+            document.getElementById("statusGroup");
+
+        const status =
+            document.getElementById("status");
+
+
+        title.textContent =
             "Create New Task";
 
-        document.getElementById("taskForm").reset();
 
-        document.getElementById("taskModal")
-            .classList.add("show");
+        form.action =
+            "{% url 'create_task' %}";
+
+
+        form.reset();
+
+        document
+            .querySelectorAll('input[name="task_assignee"]')
+            .forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+
+
+        /*
+            Hide Status when creating.
+        */
+
+        statusGroup.style.display =
+            "none";
+
+
+        /*
+            New tasks always start as TO_DO.
+        */
+
+        status.value =
+            "TO_DO";
+
+
+        /*
+            Default priority.
+        */
+
+        document.getElementById("priority").value =
+            "MEDIUM";
+
+
+        /*
+            Clear old due date.
+        */
+
+        document.getElementById("dueDate").value =
+            "";
+
+
+        modal.classList.add("show");
     }
+
 
 
     /* =========================
@@ -1166,30 +1416,91 @@
         dueDate
     ) {
 
-        document.getElementById("modalTitle").textContent =
+        const form =
+            document.getElementById("taskForm");
+
+        const modal =
+            document.getElementById("taskModal");
+
+        const title =
+            document.getElementById("modalTitle");
+
+        const statusGroup =
+            document.getElementById("statusGroup");
+
+
+        title.textContent =
             "Edit Task";
+
+
+        /*
+            Change form action to edit URL.
+        */
+
+        form.action =
+            "{% url 'edit_task' 0 %}"
+                .replace(
+                    "/0/",
+                    "/" + id + "/"
+                );
+
+
+        /*
+            Show Status when editing.
+        */
+
+        statusGroup.style.display =
+            "block";
+
+
+        /*
+            Fill task information.
+        */
 
         document.getElementById("taskName").value =
             name;
 
+
         document.getElementById("description").value =
             description;
 
-        document.getElementById("assignee").value =
-            assignee;
+
+        const selectedAssignees =
+            String(assignee || "")
+                .split(",")
+                .map(function(value) {
+                    return value.trim();
+                })
+                .filter(Boolean);
+
+        document
+            .querySelectorAll('input[name="task_assignee"]')
+            .forEach(function(checkbox) {
+                checkbox.checked =
+                    selectedAssignees.includes(checkbox.value);
+            });
+
 
         document.getElementById("priority").value =
             priority;
 
+
         document.getElementById("status").value =
             status;
 
-        document.getElementById("dueDate").value =
-            dueDate;
 
-        document.getElementById("taskModal")
-            .classList.add("show");
+        const normalizedDueDate =
+            String(dueDate || "").trim().substring(0, 10);
+
+        document.getElementById("dueDate").value =
+            /^\d{4}-\d{2}-\d{2}$/.test(normalizedDueDate)
+                ? normalizedDueDate
+                : "";
+
+
+        modal.classList.add("show");
     }
+
 
 
     /* =========================
@@ -1203,51 +1514,108 @@
     }
 
 
+
     /* =========================
-       DELETE TASK
+       FILTERS
     ========================= */
 
-    function deleteTask(taskId) {
+    function applyFilters() {
 
-        const confirmed = confirm(
-            "Are you sure you want to delete this task?"
-        );
+        const status =
+            document.getElementById(
+                "statusFilter"
+            ).value;
 
-        if (confirmed) {
 
-            /*
-             * Delete functionality will be
-             * connected to Django view here.
-             */
+        const priority =
+            document.getElementById(
+                "priorityFilter"
+            ).value;
 
-            alert(
-                "Delete task ID: " + taskId
+
+        const params =
+            new URLSearchParams();
+
+
+        if (status !== "ALL") {
+
+            params.set(
+                "status",
+                status
             );
         }
+
+
+        if (priority !== "ALL") {
+
+            params.set(
+                "priority",
+                priority
+            );
+        }
+
+
+        /*
+            Preserve current sort.
+        */
+
+        const currentSort =
+            new URLSearchParams(
+                window.location.search
+            ).get("sort");
+
+
+        if (currentSort) {
+
+            params.set(
+                "sort",
+                currentSort
+            );
+        }
+
+
+        window.location.href =
+            "?" + params.toString();
     }
 
 
+
     /* =========================
-       SORT BUTTON
+       SORT
     ========================= */
 
     function sortTasks() {
 
-        const button =
-            document.querySelector(".sort-btn");
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
 
-        if (button.textContent.includes("↑")) {
 
-            button.textContent =
-                "Due Date ↓";
+        const currentSort =
+            params.get("sort");
+
+
+        if (currentSort === "desc") {
+
+            params.set(
+                "sort",
+                "asc"
+            );
 
         } else {
 
-            button.textContent =
-                "Due Date ↑";
-
+            params.set(
+                "sort",
+                "desc"
+            );
         }
+
+
+        window.location.href =
+            "?" + params.toString();
     }
+
 
 
     /* =========================
@@ -1257,19 +1625,24 @@
 
     document
         .getElementById("taskModal")
-        .addEventListener("click", function (event) {
+        .addEventListener(
+            "click",
+            function(event) {
 
-            if (event.target === this) {
+                if (
+                    event.target === this
+                ) {
 
-                closeModal();
+                    closeModal();
+                }
 
             }
+        );
 
-        });
 
 </script>
 
 
 </body>
+
 </html>
-```

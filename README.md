@@ -23,6 +23,20 @@ A web-based Task Tracker application developed using **Python and Django**, with
 * Django-based backend with database integration
 * Simple and responsive user interface
 
+## REST API
+
+The task collection is available as JSON at `/api/tasks/`.
+
+* `GET /api/tasks/` - list tasks. Optional `status`, `priority`, and `sort=desc` query parameters are supported.
+* `POST /api/tasks/` - create a task.
+* `GET /api/tasks/<id>/` - retrieve a task.
+* `PUT /api/tasks/<id>/` - replace a task.
+* `PATCH /api/tasks/<id>/` - partially update a task.
+* `DELETE /api/tasks/<id>/` - delete a task.
+
+Create and update requests must send a JSON object with `task_name`, `task_assignee`,
+`task_priority`, and `task_due_date`. `task_description` and `task_status` are optional.
+
 ## Project Purpose
 
 The purpose of this project is to provide a simple and efficient way to organize and manage daily tasks while demonstrating practical knowledge of **Python, Django, database management, frontend development, and Git/GitHub**.

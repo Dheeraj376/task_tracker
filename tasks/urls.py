@@ -6,9 +6,21 @@ from .views import (
     edit_task,
     delete_task,
 )
+from .api import task_detail, task_list
 
 
 urlpatterns = [
+    path(
+        "api/tasks/",
+        task_list,
+        name="api_task_list",
+    ),
+
+    path(
+        "api/tasks/<int:task_id>/",
+        task_detail,
+        name="api_task_detail",
+    ),
 
     path(
         "",

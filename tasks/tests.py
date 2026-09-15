@@ -60,3 +60,42 @@ class TaskApiTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertIn("task_due_date", response.json()["errors"])
+
+    def test_list_supports_search_and_pagination(self):
+        Task_Database.objects.create(
+            **self.valid_payload(task_name="Prepare report")
+        )
+        Task_Database.objects.create(
+            **self.valid_payload(task_name="Review report")
+        )
+
+        response = self.client.get("/api/tasks/?q=prepare&page=1&limit=1")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()["tasks"]), 1)
+        self.assertEqual(response.json()["tasks"][0]["task_name"], "Prepare report")
+        self.assertEqual(response.json()["pagination"]["total"], 1)
+
+    def test_invalid_list_parameters_return_helpful_errors(self):
+        response = self.client.get("/api/tasks/?status=INVALID")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["detail"], "Invalid status filter.")
+
+        response = self.client.get("/api/tasks/?limit=101")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("limit must be between", response.json()["detail"])
+
+    def test_malformed_json_is_rejected(self):
+        response = self.client.post(
+            "/api/tasks/",
+            "{not-json}",
+            content_type="application/json",
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            response.json()["detail"],
+            "Request body must contain valid JSON.",
+        )

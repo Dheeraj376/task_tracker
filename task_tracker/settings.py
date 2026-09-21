@@ -75,21 +75,10 @@ WSGI_APPLICATION = 'task_tracker.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-      'default': {
-
-        'ENGINE': 'django.db.backends.mysql',
-
-        'NAME': 'task_tracker',
-
-        'USER': 'root',
-
-        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
-
-        'HOST': 'localhost',
-
-        'PORT': '3306',
-
-}
+    "default": {
+        "ENGINE": os.getenv("DB_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.getenv("DB_NAME", str(BASE_DIR / "db.sqlite3")),
+    }
 }
 
 

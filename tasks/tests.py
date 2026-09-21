@@ -99,3 +99,11 @@ class TaskApiTests(TestCase):
             response.json()["detail"],
             "Request body must contain valid JSON.",
         )
+
+
+class TaskDashboardTests(TestCase):
+    def test_dashboard_is_available(self):
+        response = self.client.get("/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Task Tracker")

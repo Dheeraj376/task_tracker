@@ -92,3 +92,15 @@ used as production settings.
 ## Project Purpose
 
 The purpose of this project is to provide a simple and efficient way to organize and manage daily tasks while demonstrating practical knowledge of **Python, Django, database management, frontend development, and Git/GitHub**.
+
+The project uses SQLite by default for local development. For an existing MySQL
+deployment, set `DB_ENGINE=django.db.backends.mysql`, `DB_NAME`, `DB_USER`,
+`DB_PASSWORD`, `DB_HOST`, and `DB_PORT` in the environment. Set
+`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, and `DJANGO_ALLOWED_HOSTS` before running
+outside local development.
+
+## Screenshots
+
+Project screenshots are available in [`docs/screenshots`](docs/screenshots).
+
+![Task dashboard](docs/screenshots/task-dashboard.png)

@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -52,7 +54,11 @@ class Task_Database(models.Model):
     )
 
     def clean(self):
-        if self.task_due_date < timezone.localdate():
+        if (
+            self.task_due_date
+            and isinstance(self.task_due_date, date)
+            and self.task_due_date < timezone.localdate()
+        ):
             raise ValidationError({
                 "task_due_date": "Due date must be today or a future date."
             })

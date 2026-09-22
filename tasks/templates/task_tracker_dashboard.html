@@ -69,6 +69,21 @@
     }
 
 
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+
+    .current-user {
+        color: #4b5563;
+        font-size: 14px;
+        font-weight: 600;
+        margin-right: 4px;
+    }
+
+
     .add-btn {
         background: #2563eb;
         color: white;
@@ -81,6 +96,37 @@
 
     .add-btn:hover {
         background: #1d4ed8;
+    }
+
+
+    .logout-btn {
+        background: white;
+        color: #374151;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
+        padding: 10px 14px;
+        font-weight: 600;
+    }
+
+
+    .logout-btn:hover {
+        background: #f3f4f6;
+    }
+
+
+    .profile-btn {
+        background: white;
+        color: #2563eb;
+        border: 1px solid #bfdbfe;
+        border-radius: 7px;
+        padding: 10px 14px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+
+    .profile-btn:hover {
+        background: #eff6ff;
     }
 
 
@@ -686,13 +732,24 @@
     </div>
 
 
-    <button
-        type="button"
-        class="add-btn"
-        onclick="openCreateModal()"
-    >
-        + Add Task
-    </button>
+    <div class="header-actions">
+        <span class="current-user">{{ request.user.username }}</span>
+
+        <a href="{% url 'profile' %}" class="profile-btn">Profile</a>
+
+        <button
+            type="button"
+            class="add-btn"
+            onclick="openCreateModal()"
+        >
+            + Add Task
+        </button>
+
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Sign out</button>
+        </form>
+    </div>
 
 </header>
 
@@ -912,6 +969,8 @@
 
                         <th>Created At</th>
 
+                        <th>Created By</th>
+
                         <th>Actions</th>
 
                     </tr>
@@ -921,7 +980,7 @@
 
                 <tbody id="taskTableBody">
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div class="loading-state">Loading tasks...</div>
                         </td>
                     </tr>
@@ -1584,6 +1643,7 @@
                 <td><span class="badge ${statusClass}">${escapeHtml(formatLabel(task.task_status))}</span></td>
                 <td>${escapeHtml(formatDate(task.task_due_date))}</td>
                 <td>${escapeHtml(formatCreatedDate(task.task_created_at))}</td>
+                <td>${escapeHtml(task.created_by || "Unknown")}</td>
                 <td>
                     <div class="actions">
                         <button type="button" class="edit-btn" data-action="edit" data-task-id="${task.id}">Edit</button>

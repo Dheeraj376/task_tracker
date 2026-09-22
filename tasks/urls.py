@@ -5,11 +5,25 @@ from .views import (
     create_task,
     edit_task,
     delete_task,
+    sign_up,
+    profile,
 )
 from .api import task_detail, task_list
 
 
 urlpatterns = [
+    path(
+        "signup/",
+        sign_up,
+        name="signup",
+    ),
+
+    path(
+        "profile/",
+        profile,
+        name="profile",
+    ),
+
     path(
         "api/tasks/",
         task_list,
@@ -23,7 +37,7 @@ urlpatterns = [
     ),
 
     path(
-        "",
+        "dashboard/",
         task_tracker_dashboard,
         name="dashboard"
     ),

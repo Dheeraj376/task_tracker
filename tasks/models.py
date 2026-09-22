@@ -7,6 +7,12 @@ from django.utils import timezone
 
 class Task_Database(models.Model):
 
+    created_by = models.CharField(
+        max_length=150,
+        blank=True,
+        default="",
+    )
+
     class Priority(models.TextChoices):
         LOW = "LOW", "Low"
         MEDIUM = "MEDIUM", "Medium"

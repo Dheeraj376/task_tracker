@@ -3,6 +3,7 @@ import json
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Task_Database
@@ -24,9 +25,16 @@ REQUIRED_FIELDS = frozenset(
 MAX_PAGE_SIZE = 100
 
 
+def _creator_name(request):
+    if request.user.is_authenticated:
+        return request.user.username
+    return "Anonymous"
+
+
 def serialize_task(task):
     return {
         "id": task.id,
+        "created_by": task.created_by,
         "task_name": task.task_name,
         "task_description": task.task_description,
         "task_assignee": task.task_assignee,
@@ -127,9 +135,10 @@ def _list_response(tasks, request):
 
 
 @csrf_exempt
+@login_required
 def task_list(request):
     if request.method == "GET":
-        tasks = Task_Database.objects.all()
+        tasks = Task_Database.objects.filter(created_by=_creator_name(request))
         status = request.GET.get("status")
         priority = request.GET.get("priority")
         sort = request.GET.get("sort", "asc")
@@ -169,7 +178,9 @@ def task_list(request):
     if error_response:
         return error_response
 
-    task = Task_Database()
+    task = Task_Database(
+        created_by=(request.user.username if request.user.is_authenticated else "Anonymous")
+    )
     error_response = _apply_payload(task, payload, require_all=True)
     if error_response:
         return error_response
@@ -187,9 +198,13 @@ def task_list(request):
 
 
 @csrf_exempt
+@login_required
 def task_detail(request, task_id):
     try:
-        task = Task_Database.objects.get(id=task_id)
+        task = Task_Database.objects.get(
+            id=task_id,
+            created_by=_creator_name(request),
+        )
     except Task_Database.DoesNotExist:
         return JsonResponse({"detail": "Task not found."}, status=404)
 

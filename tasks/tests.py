@@ -1,11 +1,19 @@
 from datetime import date, timedelta
 
 from django.test import TestCase
+from django.contrib.auth.models import User
 
 from .models import Task_Database
 
 
 class TaskApiTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="api_test_user",
+            password="ApiTestPassword123!",
+        )
+        self.client.force_login(self.user)
+
     def valid_payload(self, **overrides):
         payload = {
             "task_name": "Write API tests",
@@ -34,6 +42,7 @@ class TaskApiTests(TestCase):
 
     def test_update_and_delete_task(self):
         task = Task_Database.objects.create(
+            created_by=self.user.username,
             **self.valid_payload(task_name="Existing task")
         )
 
@@ -63,9 +72,11 @@ class TaskApiTests(TestCase):
 
     def test_list_supports_search_and_pagination(self):
         Task_Database.objects.create(
+            created_by=self.user.username,
             **self.valid_payload(task_name="Prepare report")
         )
         Task_Database.objects.create(
+            created_by=self.user.username,
             **self.valid_payload(task_name="Review report")
         )
 

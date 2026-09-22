@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access denied | Task Tracker</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px; background: #fef2f2; color: #1f2937; font-family: Arial, sans-serif; }
+        .card { width: min(100%, 460px); padding: 34px; text-align: center; background: white; border: 1px solid #fecaca; border-radius: 10px; }
+        h1 { margin: 0 0 10px; color: #b91c1c; font-size: 28px; }
+        p { margin: 0 0 22px; color: #6b7280; }
+        a { display: inline-block; padding: 11px 17px; border-radius: 7px; background: #2563eb; color: white; font-weight: 700; text-decoration: none; }
+        a:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+    <main class="card">
+        <h1>Access denied</h1>
+        <p>Your account does not have permission to open the admin dashboard.</p>
+        <a href="{% url 'dashboard' %}">Back to tasks</a>
+    </main>
+</body>
+</html>

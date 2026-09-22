@@ -18,6 +18,10 @@ A web-based Task Tracker application developed using **Python and Django**, with
 * View and manage existing tasks
 * Update task details
 * Delete tasks
+* User signup and login using Django's built-in authentication
+* Per-user task lists: users see only tasks they created
+* Profile details and secure password change
+* Staff-only admin dashboard for users and tasks
 * Task status management using radio buttons
 * Store task information in MySQL
 * Django-based backend with database integration
@@ -26,6 +30,10 @@ A web-based Task Tracker application developed using **Python and Django**, with
 ## REST API
 
 The task collection is available as JSON at `/api/tasks/`.
+
+All task API endpoints require an authenticated Django user. Tasks created
+through the API are automatically associated with the logged-in username in
+the `created_by` field, and users can only list or access their own tasks.
 
 * `GET /api/tasks/` - list tasks. Optional `status`, `priority`, `q`, and `sort=desc` query parameters are supported.
 * `POST /api/tasks/` - create a task.
@@ -36,6 +44,19 @@ The task collection is available as JSON at `/api/tasks/`.
 
 Create and update requests must send a JSON object with `task_name`, `task_assignee`,
 `task_priority`, and `task_due_date`. `task_description` and `task_status` are optional.
+
+## Authentication and routes
+
+* `/` - main login page
+* `/signup/` - create a user account
+* `/dashboard/` - authenticated user's task dashboard
+* `/profile/` - view profile details and change password
+* `/logout/` - sign out and return to the main login page
+* `/admin-dashboard/login/` - staff admin login
+* `/admin-dashboard/` - staff-only user and task administration dashboard
+
+The local development admin account is `admin` with password `admin`. Change
+this password before using the project outside local development.
 
 ### API examples
 

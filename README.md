@@ -1,127 +1,182 @@
 # Task Tracker
 
-A web-based Task Tracker application developed using **Python and Django**, with **MySQL** as the database and **HTML, CSS, and JavaScript** for the frontend. The application allows users to create, view, update, and manage tasks through a simple and user-friendly interface.
+## Windows installation
 
-## Technologies Used
+### Prerequisites
 
-* **Python** – Backend programming and application logic
-* **Django** – Web framework for developing the backend
-* **MySQL** – Database for storing task information
-* **HTML** – Web page structure
-* **CSS** – User interface styling and layout
-* **JavaScript** – Client-side interactions
-* **Git & GitHub** – Version control and project management
+Install the following software:
 
-## Key Features
+- Python 3.10 or newer
+- Git
+- MySQL Server 8.0 or newer if you are using MySQL instead of SQLite
 
-* Create and add new tasks
-* View and manage existing tasks
-* Update task details
-* Delete tasks
-* User signup and login using Django's built-in authentication
-* Per-user task lists: users see only tasks they created
-* Profile details and secure password change
-* Staff-only admin dashboard for users and tasks
-* Task status management using radio buttons
-* Store task information in MySQL
-* Django-based backend with database integration
-* Simple and responsive user interface
+### 1. Open the project
 
-## REST API
+Open PowerShell and move to the project directory:
 
-The task collection is available as JSON at `/api/tasks/`.
-
-All task API endpoints require an authenticated Django user. Tasks created
-through the API are automatically associated with the logged-in username in
-the `created_by` field, and users can only list or access their own tasks.
-
-* `GET /api/tasks/` - list tasks. Optional `status`, `priority`, `q`, and `sort=desc` query parameters are supported.
-* `POST /api/tasks/` - create a task.
-* `GET /api/tasks/<id>/` - retrieve a task.
-* `PUT /api/tasks/<id>/` - replace a task.
-* `PATCH /api/tasks/<id>/` - partially update a task.
-* `DELETE /api/tasks/<id>/` - delete a task.
-
-Create and update requests must send a JSON object with `task_name`, `task_assignee`,
-`task_priority`, and `task_due_date`. `task_description` and `task_status` are optional.
-
-## Authentication and routes
-
-* `/` - main login page
-* `/signup/` - create a user account
-* `/dashboard/` - authenticated user's task dashboard
-* `/profile/` - view profile details and change password
-* `/logout/` - sign out and return to the main login page
-* `/admin-dashboard/login/` - staff admin login
-* `/admin-dashboard/` - staff-only user and task administration dashboard
-
-The local development admin account is `admin` with password `admin`. Change
-this password before using the project outside local development.
-
-### API examples
-
-Search and filter tasks:
-
-```text
-GET /api/tasks/?q=report&status=IN_PROGRESS&priority=HIGH&sort=desc
+```powershell
+cd C:\Users\Dheeraj\Desktop\demoproject\task_tracker
 ```
 
-Paginate results with a maximum page size of 100:
+### 2. Create a virtual environment
 
-```text
-GET /api/tasks/?page=1&limit=20
+```powershell
+py -m venv .venv
 ```
 
-Paginated responses include `tasks` and a `pagination` object containing `page`,
-`limit`, `total`, and `pages`. Requests without `page` or `limit` retain the
-simple full-list response used by the dashboard.
+Activate it:
 
-Errors return a consistent JSON shape:
-
-```json
-{
-  "detail": "Invalid status filter."
-}
+```powershell
+.\.venv\Scripts\Activate.ps1
 ```
 
-## Development and testing
+If PowerShell blocks the activation script, allow locally created scripts for
+your Windows user:
 
-Run the project checks and tests before opening a pull request:
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+Then activate the environment again:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install Python dependencies
+
+```powershell
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+For MySQL support, install the MySQL Python driver as well:
+
+```powershell
+pip install mysqlclient
+```
+
+### 4. Apply database migrations
+
+For the default local SQLite database:
+
+```powershell
+python manage.py migrate
+```
+
+For MySQL, complete the [MySQL configuration](#mysql-configuration) first and
+then run the same migration command.
+
+### 5. Check the project
 
 ```powershell
 python manage.py check
-python manage.py test
 ```
 
-The test suite covers API CRUD operations, validation failures, filtering,
-search, pagination, and malformed JSON requests.
+### 6. Start the development server
 
-For maintainable changes:
+```powershell
+python manage.py runserver
+```
 
-* Keep API behavior documented in this README.
-* Keep business validation in the model and API input validation in the API layer.
-* Add regression tests for every new endpoint behavior.
-* Use focused commits and review `git diff --check` before committing.
+Open the application at <http://127.0.0.1:8000/>.
 
-## Production documentation checklist
+To create a Django administrator account:
 
-Before deploying, document environment variables, database setup, authentication,
-allowed hosts, CORS policy, migrations, backups, logging, and rollback steps.
-The current development settings contain local configuration and should not be
-used as production settings.
+```powershell
+python manage.py createsuperuser
+```
 
-## Project Purpose
+The custom staff dashboard is available at
+<http://127.0.0.1:8000/admin-dashboard/login/>.
 
-The purpose of this project is to provide a simple and efficient way to organize and manage daily tasks while demonstrating practical knowledge of **Python, Django, database management, frontend development, and Git/GitHub**.
+## MySQL configuration
 
-The project uses SQLite by default for local development. For an existing MySQL
-deployment, set `DB_ENGINE=django.db.backends.mysql`, `DB_NAME`, `DB_USER`,
-`DB_PASSWORD`, `DB_HOST`, and `DB_PORT` in the environment. Set
-`DJANGO_SECRET_KEY`, `DJANGO_DEBUG`, and `DJANGO_ALLOWED_HOSTS` before running
-outside local development.
+The project uses SQLite by default. To use MySQL, create a database and user,
+install the MySQL driver, and configure the database through environment
+variables.
 
-## Screenshots
+### 1. Create the MySQL database
 
-Project screenshots are available in [`docs/screenshots`](docs/screenshots).
+Open MySQL Command Line Client, MySQL Workbench, or a terminal connected to
+your MySQL server and run:
 
-![Task dashboard](docs/screenshots/task-dashboard.png)
+```sql
+CREATE DATABASE task_tracker
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+CREATE USER 'task_tracker_user'@'localhost'
+    IDENTIFIED BY 'replace-with-a-strong-password';
+
+GRANT ALL PRIVILEGES ON task_tracker.*
+    TO 'task_tracker_user'@'localhost';
+
+FLUSH PRIVILEGES;
+```
+
+Use a strong password and do not commit it to Git.
+
+### 2. Install the MySQL driver on Windows
+
+Activate the project's virtual environment and run:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+pip install mysqlclient
+```
+
+If `mysqlclient` cannot be built on your machine, install the current
+Microsoft C++ Build Tools and retry. The required workload is **Desktop
+development with C++**.
+
+### 3. Set database environment variables
+
+The Django settings read these variables:
+
+```powershell
+$env:DB_ENGINE = "django.db.backends.mysql"
+$env:DB_NAME = "task_tracker"
+$env:DB_USER = "task_tracker_user"
+$env:DB_PASSWORD = "replace-with-a-strong-password"
+$env:DB_HOST = "127.0.0.1"
+$env:DB_PORT = "3306"
+```
+
+These variables apply only to the current PowerShell window. Set them again
+after opening a new terminal.
+
+To set them persistently for the current Windows user, use:
+
+```powershell
+[Environment]::SetEnvironmentVariable("DB_ENGINE", "django.db.backends.mysql", "User")
+[Environment]::SetEnvironmentVariable("DB_NAME", "task_tracker", "User")
+[Environment]::SetEnvironmentVariable("DB_USER", "task_tracker_user", "User")
+[Environment]::SetEnvironmentVariable("DB_PASSWORD", "replace-with-a-strong-password", "User")
+[Environment]::SetEnvironmentVariable("DB_HOST", "127.0.0.1", "User")
+[Environment]::SetEnvironmentVariable("DB_PORT", "3306", "User")
+```
+
+Restart PowerShell after setting persistent variables.
+
+### 4. Verify the MySQL connection
+
+From the project root, with the virtual environment activated:
+
+```powershell
+python manage.py check
+python manage.py migrate
+```
+
+If both commands complete successfully, Django can connect to the configured
+MySQL database and has created the required tables.
+
+### Configuration notes
+
+- `DB_ENGINE` must be exactly `django.db.backends.mysql`.
+- Use `127.0.0.1` rather than `localhost` if your local MySQL setup has
+  socket or name-resolution issues.
+- Confirm that the MySQL service is running before starting Django.
+- Do not commit passwords, secret keys, or `.env` files.
+- The local SQLite file `db.sqlite3` is ignored by Git and is not used when
+  `DB_ENGINE` is set to MySQL.

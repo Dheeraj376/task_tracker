@@ -83,7 +83,7 @@ application surfaces: a server-rendered web UI and a JSON API.
                                     |
                                     v
                          +----------+-----------+
-                         | SQLite or MySQL     |
+                         |      MySQL           |
                          +----------------------+
 ```
 
@@ -195,30 +195,12 @@ The model's `clean()` method rejects a due date earlier than
 `timezone.localdate()`. Both the HTML and API workflows call `full_clean()`
 before saving, so the same model rule is applied to both entry points.
 
-### 6.3 Ownership strategy
-
-The current schema stores the creator as a username string instead of a
-database foreign key. The dashboard and API list/detail queries use that
-string to identify a user's tasks.
-
-For a production-scale system, the recommended design is:
-
-```python
-created_by = models.ForeignKey(
-    User,
-    on_delete=models.CASCADE,
-    related_name="tasks",
-)
-```
-
-This would preserve referential integrity and continue working if a username
-changes.
 
 ## 7. Authentication and authorization
 
 ### 7.1 Normal user authentication
 
-- `/` and `/login/` display the login form.
+-  `/login/` display the login form.
 - `login_page` authenticates credentials with Django.
 - Successful authentication creates a session and redirects to `/dashboard/`.
 - `/logout/` uses Django's `LogoutView`.
